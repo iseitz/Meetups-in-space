@@ -1,0 +1,65 @@
+<h1><%= @meetup.title %></h1>
+
+<% if @errors %>
+  <h4> Errors: </h4>
+  <ul>
+    <% @errors.each do |error| %>
+  <li>  <%= error + "\n" %> </li>
+    <% end %>
+  </ul>
+<% end %>
+
+
+<dl>
+  <dt>Topic of the meetup: </dt>
+    <dd><%= @meetup.theme %></dd>
+
+  <dt>The meetup happens:</dt>
+    <dd><%= @date %></dd>
+    <dd><%= @begin_time %> - <%= @end_time %></dd>
+
+  <dt>Location:</dt>
+    <dd><%= @meetup.location %></dd>
+
+  <dt> Organized by: </dt>
+  <% @users = User.all %>
+
+  <% @users.each do |user| %>
+    <% if user.id === @meetup.user_id %>
+      <dd><img src="<%=user.avatar_url %>" alt="#{user.username} avatar" width="128" height="128"><br> <%=user.username %> </dd>
+     <% end %>
+  <% end %>
+</dl>
+<h4> Description: <h4>
+<p><%= @meetup.description %></p>
+
+<table>
+  <tr> <h4> Members of the meetup: </h4> </tr>
+    <% @registrations.each do |registration| %>
+      <% user_id = registration.user_id %>
+      <% @users = User.all %>
+      <%@user = @users.find(user_id)%>
+      <td>
+        <img src="<%=@user.avatar_url %>" alt="iseitz avatar" width="128" height="128"><br>
+        <%= @user.username %><br>
+      </td>
+    <% end %>
+
+
+
+<% if allowed_to_join?(@user_id, @meetup, @registrations) %>
+
+  <form action="/meetups/<%=@meetup.id %>" method="post">
+    <button class="button_margin" type="submit" name="user_id" value="<%=@user_id %>"> Join this meetup </button>
+  </form><br>
+
+
+<% end %>
+
+<% if correct_user?(@user) %>
+  <form action="/meetups/edit/<%=@meetup.id %>" method="post">
+    <button class="button_margin" type="submit" name="user_id" value="<%=@user_id %>"> Edit this meetup </button>
+  </form><br>
+<% end %>
+
+<a href="/meetups">Back to all meetups</a>

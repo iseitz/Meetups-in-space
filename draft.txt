@@ -1,0 +1,9 @@
+<% if @user_id.nil? || !@registrations.include?(@user_id) || @user_id != @meetup.user_id %>
+  <form action="/meetups/<%=@meetup.id %>" method="post">
+    <button class="button_margin" type="submit" name="user_id" value="<%=@user_id %>"> Join this meetup </button>
+  </form>
+<% else %>
+  <form action="/meetups/<%=@meetup.id %>" method="post">
+    <button class="button_margin" type="hidden" name="user_id" value="<%=@user_id %>"> Join this meetup </button>
+  </form><br>
+<% end %>
